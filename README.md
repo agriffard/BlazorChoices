@@ -207,7 +207,7 @@ dotnet publish -c Release -o publish
 
 - .NET 10
 - Blazor WebAssembly
-- Choices.js v11.1.0
+- Choices.js v11.2.0
 - JavaScript Interop
 
 ## Contributing
