@@ -68,7 +68,7 @@ public abstract class ChoicesBase : ComponentBase, IAsyncDisposable
             });
 
             var result = await _module.InvokeAsync<bool>(
-                "blazorChoices.init",
+                "init",
                 ElementId,
                 JsonSerializer.Deserialize<JsonElement>(options),
                 DotNetReference,
@@ -92,7 +92,7 @@ public abstract class ChoicesBase : ComponentBase, IAsyncDisposable
 
         try
         {
-            await _module.InvokeVoidAsync("blazorChoices.destroy", ElementId);
+            await _module.InvokeVoidAsync("destroy", ElementId);
             _initialized = false;
         }
         catch (Exception ex)
@@ -111,7 +111,7 @@ public abstract class ChoicesBase : ComponentBase, IAsyncDisposable
 
         try
         {
-            await _module.InvokeVoidAsync("blazorChoices.setValue", ElementId, value);
+            await _module.InvokeVoidAsync("setValue", ElementId, value);
         }
         catch (Exception ex)
         {
@@ -129,7 +129,7 @@ public abstract class ChoicesBase : ComponentBase, IAsyncDisposable
 
         try
         {
-            return await _module.InvokeAsync<object>("blazorChoices.getValue", ElementId);
+            return await _module.InvokeAsync<object>("getValue", ElementId);
         }
         catch (Exception ex)
         {
