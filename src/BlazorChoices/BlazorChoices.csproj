@@ -7,9 +7,9 @@
 		<Authors>Antoine Griffard</Authors>
 		<Description>Blazor component using Choices.</Description>
 		<PackageTags>blazor, choices</PackageTags>
-		<RepositoryUrl>https://github.com/agriffard/Ant1</RepositoryUrl>
+		<RepositoryUrl>https://github.com/agriffard/BlazorChoices</RepositoryUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageProjectUrl>https://github.com/agriffard/Ant1</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/agriffard/BlazorChoices</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
