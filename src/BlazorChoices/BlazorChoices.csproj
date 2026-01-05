@@ -5,7 +5,7 @@
 		<PackageId>BlazorChoices</PackageId>
 		<Version>0.0.1</Version>
 		<Authors>Antoine Griffard</Authors>
-		<Description>Blazor component using Choices-js.</Description>
+		<Description>Blazor component using Choices.</Description>
 		<PackageTags>blazor, choices</PackageTags>
 		<RepositoryUrl>https://github.com/agriffard/Ant1</RepositoryUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
