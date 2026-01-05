@@ -16,7 +16,7 @@ jobs:
       run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
 
     - name: Update <Version> in csproj
-      run: sed -i 's|<Version>.*</Version>|<Version>'$VERSION'</Version>|' src/Ant1/Ant1.csproj
+      run: sed -i 's|<Version>.*</Version>|<Version>'$VERSION'</Version>|' src/BlazorChoices/BlazorChoices.csproj
         
     - name: Set up .NET
       uses: actions/setup-dotnet@v4
@@ -24,13 +24,13 @@ jobs:
         dotnet-version: '10.0.x'
 
     - name: Restore dependencies
-      run: dotnet restore src/Ant1/Ant1.csproj
+      run: dotnet restore src/BlazorChoices/BlazorChoices.csproj
 
     - name: Build
-      run: dotnet build src/Ant1/Ant1.csproj -c Release --no-restore
+      run: dotnet build src/BlazorChoices/BlazorChoices.csproj -c Release --no-restore
       
     - name: Pack NuGet package
-      run: dotnet pack src/Ant1/Ant1.csproj -c Release -p:PackageVersion=${VERSION} -o ./nupkgs
+      run: dotnet pack src/BlazorChoices/BlazorChoices.csproj -c Release -p:PackageVersion=${VERSION} -o ./nupkgs
 
     - name: Publish NuGet package
       run: dotnet nuget push ./nupkgs/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
