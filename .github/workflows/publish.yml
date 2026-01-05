@@ -1,0 +1,36 @@
+name: Publish NuGet Package
+
+on:
+  release:
+    types:
+      - created
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set VERSION from release tag
+      run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
+
+    - name: Update <Version> in csproj
+      run: sed -i 's|<Version>.*</Version>|<Version>'$VERSION'</Version>|' src/Ant1/Ant1.csproj
+        
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore src/Ant1/Ant1.csproj
+
+    - name: Build
+      run: dotnet build src/Ant1/Ant1.csproj -c Release --no-restore
+      
+    - name: Pack NuGet package
+      run: dotnet pack src/Ant1/Ant1.csproj -c Release -p:PackageVersion=${VERSION} -o ./nupkgs
+
+    - name: Publish NuGet package
+      run: dotnet nuget push ./nupkgs/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
