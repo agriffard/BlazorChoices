@@ -2,8 +2,6 @@
 
 A Blazor component library that wraps [Choices.js](https://github.com/Choices-js/Choices) to provide enhanced select and input elements with search, tags, and more.
 
-![BlazorChoices Demo](https://github.com/user-attachments/assets/3687a149-2f79-4ce8-b57e-0bdf33cbbddf)
-
 ## Features
 
 - ✅ Single and multiple select support
