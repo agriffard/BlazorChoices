@@ -1,0 +1,215 @@
+﻿@page "/"
+
+<PageTitle>BlazorChoices Demo</PageTitle>
+
+<div class="container mt-4">
+    <h1 class="mb-4">BlazorChoices Demo</h1>
+    <p class="lead">A Blazor component wrapping Choices.js for enhanced select and input elements</p>
+
+    <div class="row mt-5">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Simple Select</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Choose a fruit:</label>
+                        <ChoicesSelect OnChange="@OnSingleChange" Options="@simpleOptions">
+                            <option value="">Select a fruit...</option>
+                            <option value="apple">Apple</option>
+                            <option value="banana">Banana</option>
+                            <option value="orange">Orange</option>
+                            <option value="grape">Grape</option>
+                            <option value="mango">Mango</option>
+                            <option value="strawberry">Strawberry</option>
+                        </ChoicesSelect>
+                    </div>
+                    @if (!string.IsNullOrEmpty(selectedFruit))
+                    {
+                        <div class="alert alert-info">
+                            Selected: <strong>@selectedFruit</strong>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Multiple Select</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Choose countries:</label>
+                        <ChoicesSelect Multiple="true" OnChangeMultiple="@OnMultipleChange" Options="@multipleOptions">
+                            <option value="us">United States</option>
+                            <option value="uk">United Kingdom</option>
+                            <option value="fr">France</option>
+                            <option value="de">Germany</option>
+                            <option value="es">Spain</option>
+                            <option value="it">Italy</option>
+                            <option value="ca">Canada</option>
+                            <option value="au">Australia</option>
+                        </ChoicesSelect>
+                    </div>
+                    @if (selectedCountries?.Length > 0)
+                    {
+                        <div class="alert alert-info">
+                            Selected: <strong>@string.Join(", ", selectedCountries)</strong>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Tags Input</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Enter tags:</label>
+                        <ChoicesInput OnTagsChanged="@OnTagsChange" Options="@tagOptions" />
+                        <small class="form-text text-muted">Type and press Enter to add tags</small>
+                    </div>
+                    @if (tags?.Length > 0)
+                    {
+                        <div class="alert alert-info">
+                            Tags: <strong>@string.Join(", ", tags)</strong>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Dynamic Data</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Choose from @programmingLanguages.Count languages:</label>
+                        <ChoicesSelect OnChange="@OnLanguageChange" Options="@dynamicOptions">
+                            <option value="">Select a language...</option>
+                            @foreach (var lang in programmingLanguages)
+                            {
+                                <option value="@lang.Key">@lang.Value</option>
+                            }
+                        </ChoicesSelect>
+                    </div>
+                    @if (!string.IsNullOrEmpty(selectedLanguage))
+                    {
+                        <div class="alert alert-info">
+                            Selected: <strong>@programmingLanguages.GetValueOrDefault(selectedLanguage, selectedLanguage)</strong>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>About</h3>
+                </div>
+                <div class="card-body">
+                    <p>
+                        This is a Blazor component library that wraps <a href="https://github.com/Choices-js/Choices" target="_blank">Choices.js</a>
+                        to provide enhanced select and input elements with search, tags, and more.
+                    </p>
+                    <h4 class="mt-3">Features</h4>
+                    <ul>
+                        <li>Single and multiple select support</li>
+                        <li>Tags input with add/remove</li>
+                        <li>Built-in search functionality</li>
+                        <li>Configurable options</li>
+                        <li>Event callbacks for value changes</li>
+                        <li>Full Blazor interop support</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string selectedFruit = string.Empty;
+    private string[] selectedCountries = Array.Empty<string>();
+    private string[] tags = Array.Empty<string>();
+    private string selectedLanguage = string.Empty;
+
+    private ChoicesOptions simpleOptions = new()
+    {
+        SearchEnabled = true,
+        PlaceholderValue = "Select a fruit...",
+        ShouldSort = true
+    };
+
+    private ChoicesOptions multipleOptions = new()
+    {
+        RemoveItemButton = true,
+        SearchEnabled = true,
+        PlaceholderValue = "Choose countries...",
+        MaxItemCount = 5
+    };
+
+    private ChoicesOptions tagOptions = new()
+    {
+        RemoveItemButton = true,
+        AddItems = true,
+        DuplicateItemsAllowed = false,
+        MaxItemCount = 10
+    };
+
+    private ChoicesOptions dynamicOptions = new()
+    {
+        SearchEnabled = true,
+        ShouldSort = true,
+        PlaceholderValue = "Select a programming language..."
+    };
+
+    private Dictionary<string, string> programmingLanguages = new()
+    {
+        { "csharp", "C#" },
+        { "javascript", "JavaScript" },
+        { "python", "Python" },
+        { "java", "Java" },
+        { "typescript", "TypeScript" },
+        { "go", "Go" },
+        { "rust", "Rust" },
+        { "cpp", "C++" },
+        { "ruby", "Ruby" },
+        { "php", "PHP" },
+        { "swift", "Swift" },
+        { "kotlin", "Kotlin" }
+    };
+
+    private void OnSingleChange(string value)
+    {
+        selectedFruit = value;
+    }
+
+    private void OnMultipleChange(string[] values)
+    {
+        selectedCountries = values;
+    }
+
+    private void OnTagsChange(string[] values)
+    {
+        tags = values;
+    }
+
+    private void OnLanguageChange(string value)
+    {
+        selectedLanguage = value;
+    }
+}
+
