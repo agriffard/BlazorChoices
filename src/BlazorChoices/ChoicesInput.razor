@@ -1,0 +1,51 @@
+@namespace BlazorChoices
+@inherits ChoicesBase
+
+<input id="@ElementId" class="@Class" type="text" @attributes="AdditionalAttributes" />
+
+@code {
+    /// <summary>
+    /// Event callback for tags changes
+    /// </summary>
+    [Parameter]
+    public EventCallback<string[]> OnTagsChanged { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await InitAsync();
+        }
+    }
+
+    [JSInvokable]
+    public override async Task OnChangeInternal(JsonElement value)
+    {
+        try
+        {
+            string[] tags;
+            
+            if (value.ValueKind == JsonValueKind.Array)
+            {
+                tags = value.EnumerateArray()
+                    .Select(x => x.GetString() ?? string.Empty)
+                    .ToArray();
+            }
+            else if (value.ValueKind == JsonValueKind.String)
+            {
+                var val = value.GetString();
+                tags = string.IsNullOrEmpty(val) ? Array.Empty<string>() : new[] { val };
+            }
+            else
+            {
+                tags = Array.Empty<string>();
+            }
+
+            await OnTagsChanged.InvokeAsync(tags);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error handling tags change event: {ex.Message}");
+        }
+    }
+}

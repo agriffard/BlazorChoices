@@ -1,0 +1,78 @@
+@namespace BlazorChoices
+@inherits ChoicesBase
+
+<select id="@ElementId" class="@Class" multiple="@Multiple" @attributes="AdditionalAttributes">
+    @ChildContent
+</select>
+
+@code {
+    /// <summary>
+    /// Allow multiple selections
+    /// </summary>
+    [Parameter]
+    public bool Multiple { get; set; }
+
+    /// <summary>
+    /// Child content (option elements)
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Event callback for single value changes
+    /// </summary>
+    [Parameter]
+    public EventCallback<string> OnChange { get; set; }
+
+    /// <summary>
+    /// Event callback for multiple value changes
+    /// </summary>
+    [Parameter]
+    public EventCallback<string[]> OnChangeMultiple { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await InitAsync();
+        }
+    }
+
+    [JSInvokable]
+    public override async Task OnChangeInternal(JsonElement value)
+    {
+        try
+        {
+            if (Multiple)
+            {
+                if (value.ValueKind == JsonValueKind.Array)
+                {
+                    var values = value.EnumerateArray()
+                        .Select(x => x.GetString() ?? string.Empty)
+                        .ToArray();
+                    await OnChangeMultiple.InvokeAsync(values);
+                }
+                else if (value.ValueKind == JsonValueKind.String)
+                {
+                    var val = value.GetString();
+                    await OnChangeMultiple.InvokeAsync(string.IsNullOrEmpty(val) ? Array.Empty<string>() : new[] { val });
+                }
+                else
+                {
+                    await OnChangeMultiple.InvokeAsync(Array.Empty<string>());
+                }
+            }
+            else
+            {
+                var stringValue = value.ValueKind == JsonValueKind.String 
+                    ? value.GetString() ?? string.Empty
+                    : value.ToString();
+                await OnChange.InvokeAsync(stringValue);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error handling change event: {ex.Message}");
+        }
+    }
+}
